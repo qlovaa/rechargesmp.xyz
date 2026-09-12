@@ -1,0 +1,3227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Recharge SMP | Minecraft Survival</title>
+
+  <meta
+    name="description"
+    content="Recharge SMP — survive, recharge, explore and build your legacy."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg: #030508;
+      --panel: #0a1018;
+      --red: #ff1f32;
+      --red-light: #ff4856;
+      --green: #39edaa;
+      --white: #ffffff;
+      --text: #e8ebef;
+      --muted: #9099a7;
+      --border: rgba(255,255,255,.09);
+      --pixel: "Press Start 2P", monospace;
+      --sans: "Inter", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    ::selection {
+      background: var(--red);
+      color: white;
+    }
+
+    /* ==========================================
+       GLOBAL
+    ========================================== */
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .relative {
+      position: relative;
+      z-index: 2;
+    }
+
+    .section {
+      position: relative;
+      padding: 105px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 55px;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::before,
+    .section-kicker::after {
+      content: "";
+      width: 25px;
+      height: 1px;
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red);
+    }
+
+    .section-title h2 {
+      color: white;
+      font-family: var(--pixel);
+      font-size: clamp(20px, 3vw, 32px);
+      line-height: 1.6;
+    }
+
+    .section-title p {
+      max-width: 650px;
+      margin: 15px auto 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* ==========================================
+       PROGRESS
+    ========================================== */
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 5000;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), #ff6570);
+      box-shadow: 0 0 15px var(--red);
+    }
+
+    /* ==========================================
+       PARTICLES
+    ========================================== */
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(255, 50, 65, .55);
+      box-shadow: 0 0 8px rgba(255,30,45,.6);
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      from {
+        transform: translateY(110vh) scale(.5);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      85% {
+        opacity: .8;
+      }
+
+      to {
+        transform: translateY(-15vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================
+       REVEAL
+    ========================================== */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(45px);
+      transition:
+        opacity .8s ease,
+        transform .8s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================
+       HEADER
+    ========================================== */
+
+    header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 4000;
+      background: rgba(3,5,8,.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: .3s ease;
+    }
+
+    header.scrolled {
+      background: rgba(3,5,8,.94);
+      border-color: rgba(255,255,255,.1);
+    }
+
+    .navbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      font-family: var(--pixel);
+      font-size: 16px;
+      letter-spacing: -1px;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--red);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: #aeb5c0;
+      font-size: 11px;
+      font-weight: 800;
+      transition: color .2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: white;
+    }
+
+    .nav-links a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -12px;
+      height: 2px;
+      background: var(--red);
+      box-shadow: 0 0 12px var(--red);
+    }
+
+    .nav-discord {
+      padding: 12px 17px;
+      border-radius: 5px;
+      background: var(--red);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: 0 0 22px rgba(255,30,45,.2);
+      transition: .2s ease;
+    }
+
+    .nav-discord:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255,30,45,.45);
+    }
+
+    .mobile-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      color: white;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    /* ==========================================
+       HERO
+    ========================================== */
+
+    .hero {
+      min-height: 850px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at 80% 30%,
+          rgba(255,30,45,.15),
+          transparent 25%
+        ),
+        radial-gradient(
+          circle at 20% 80%,
+          rgba(255,30,45,.06),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #080c13 0%,
+          #030508 50%,
+          #08070a 100%
+        );
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .06;
+
+      background-image:
+        linear-gradient(rgba(255,255,255,.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.25) 1px, transparent 1px);
+
+      background-size: 50px 50px;
+
+      mask-image: linear-gradient(
+        to bottom,
+        black 30%,
+        transparent 90%
+      );
+
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(50px);
+      }
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    .orb-one {
+      width: 450px;
+      height: 450px;
+      right: -100px;
+      top: 120px;
+      background: rgba(255,30,45,.08);
+      animation: orbFloat 7s ease-in-out infinite;
+    }
+
+    .orb-two {
+      width: 250px;
+      height: 250px;
+      left: 10%;
+      bottom: -60px;
+      background: rgba(255,30,45,.05);
+      animation: orbFloat 9s ease-in-out infinite reverse;
+    }
+
+    @keyframes orbFloat {
+      0%,100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-30px);
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      padding-top: 80px;
+    }
+
+    .hero-logo {
+      max-width: 900px;
+      margin-bottom: 26px;
+
+      font-family: var(--pixel);
+      font-size: clamp(38px, 7vw, 82px);
+      line-height: 1.16;
+      letter-spacing: -5px;
+      user-select: none;
+    }
+
+    .hero-logo .red {
+      color: var(--red);
+      animation: textGlow 3s ease-in-out infinite;
+    }
+
+    .hero-logo .white {
+      color: white;
+    }
+
+    @keyframes textGlow {
+      0%,100% {
+        text-shadow:
+          0 0 0 rgba(255,30,45,0),
+          4px 4px 0 rgba(0,0,0,.4);
+      }
+
+      50% {
+        text-shadow:
+          0 0 30px rgba(255,30,45,.3),
+          4px 4px 0 rgba(0,0,0,.4);
+      }
+    }
+
+    .hero-tagline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+      font-family: var(--pixel);
+      font-size: clamp(10px, 1.4vw, 15px);
+    }
+
+    .hero-tagline .dot {
+      color: var(--red);
+    }
+
+    .hero-description {
+      max-width: 600px;
+      margin-bottom: 28px;
+      color: #aeb6c1;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    /* ==========================================
+       HERO IP
+    ========================================== */
+
+    .hero-server-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .server-ip {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 11px 15px;
+
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 7px;
+
+      background: rgba(255,255,255,.035);
+      backdrop-filter: blur(10px);
+
+      cursor: pointer;
+
+      transition: .25s ease;
+    }
+
+    .server-ip:hover {
+      border-color: rgba(255,30,45,.5);
+      background: rgba(255,30,45,.045);
+      transform: translateY(-2px);
+    }
+
+    .ip-label {
+      color: #707986;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .ip-value {
+      color: white;
+      font-family: monospace;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .copy-icon {
+      color: var(--red);
+      font-size: 15px;
+    }
+
+    .copy-message {
+      margin-top: 10px;
+      color: #55ec98;
+      font-size: 10px;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: .25s ease;
+    }
+
+    .copy-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 32px;
+      z-index: 4;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+
+      transform: translateX(-50%);
+
+      color: #6f7782;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 42px;
+      background: linear-gradient(var(--red), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%,100% {
+        opacity: .4;
+        transform: scaleY(.65);
+        transform-origin: top;
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+    }
+
+    /* ==========================================
+       FEATURES
+    ========================================== */
+
+    .features {
+      background: linear-gradient(#030508,#070a0f);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      min-height: 290px;
+      position: relative;
+      overflow: hidden;
+
+      padding: 30px 22px;
+
+      border: 1px solid var(--border);
+      border-radius: 9px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.025),
+          transparent 55%
+        ),
+        #080d13;
+
+      transition:
+        transform .35s cubic-bezier(.16,1,.3,1),
+        border-color .35s ease,
+        box-shadow .35s ease;
+    }
+
+    .feature-card::before {
+      content: "";
+
+      position: absolute;
+
+      width: 130px;
+      height: 130px;
+
+      left: var(--mx,50%);
+      top: var(--my,0);
+
+      transform: translate(-50%,-50%);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,30,45,.17),
+          transparent 70%
+        );
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity .3s ease;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-9px);
+      border-color: rgba(255,30,45,.4);
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.28),
+        0 0 30px rgba(255,30,45,.05);
+    }
+
+    .feature-number {
+      position: absolute;
+      top: 17px;
+      right: 18px;
+
+      color: rgba(255,255,255,.06);
+      font-family: var(--pixel);
+      font-size: 25px;
+    }
+
+    .feature-icon {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 42px;
+      transition: transform .3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.12) rotate(-4deg);
+    }
+
+    .feature-card h3 {
+      margin-bottom: 13px;
+      font-family: var(--pixel);
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .feature-line {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 20px;
+      height: 2px;
+      overflow: hidden;
+      background: rgba(255,255,255,.05);
+    }
+
+    .feature-line span {
+      display: block;
+      width: 45%;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--red)
+        );
+
+      transform: translateX(-100%);
+      transition: transform .8s ease;
+    }
+
+    .feature-card:hover .feature-line span {
+      transform: translateX(220%);
+    }
+
+    /* ==========================================
+       LIFE SYSTEM
+    ========================================== */
+
+    .recharge-section {
+      background:
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(255,30,45,.04),
+          transparent 45%
+        );
+    }
+
+    .life-panel {
+      position: relative;
+      overflow: hidden;
+
+      padding: 35px;
+
+      border: 1px solid rgba(255,30,45,.32);
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,30,45,.055),
+          transparent 55%
+        ),
+        #080b11;
+    }
+
+    .life-panel::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        );
+
+      background-size: 35px 35px;
+
+      mask-image:
+        linear-gradient(
+          to bottom,
+          black,
+          transparent
+        );
+
+      pointer-events: none;
+    }
+
+    .life-top {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 35px;
+      text-align: center;
+    }
+
+    .life-top h3 {
+      margin-bottom: 9px;
+      font-family: var(--pixel);
+      font-size: 13px;
+    }
+
+    .life-top p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .life-flow {
+      position: relative;
+      z-index: 2;
+
+      display: grid;
+
+      grid-template-columns:
+        1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+
+      align-items: center;
+      gap: 13px;
+    }
+
+    .life-step {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .life-icon {
+      margin-bottom: 13px;
+      font-size: 34px;
+    }
+
+    .life-step h4 {
+      margin-bottom: 7px;
+      font-family: var(--pixel);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .life-step p {
+      color: #737c89;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .life-arrow {
+      color: var(--red);
+      font-size: 26px;
+      animation: arrowPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+      0%,100% {
+        opacity: .35;
+        transform: translateX(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+    }
+
+    /* ==========================================
+       COMMANDS
+    ========================================== */
+
+    .commands-section {
+      background: #05080c;
+    }
+
+    .terminal {
+      overflow: hidden;
+
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+
+      background: #070a0e;
+
+      box-shadow:
+        0 25px 80px rgba(0,0,0,.35);
+    }
+
+    .terminal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 12px 16px;
+
+      background: #0c1118;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .terminal-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot:nth-child(1) {
+      background: #ff4a57;
+    }
+
+    .terminal-dot:nth-child(2) {
+      background: #f5bd44;
+    }
+
+    .terminal-dot:nth-child(3) {
+      background: #40d979;
+    }
+
+    .terminal-title {
+      color: #6c7480;
+      font-family: monospace;
+      font-size: 9px;
+    }
+
+    .command-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+    }
+
+    .command {
+      min-height: 220px;
+
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      padding: 28px 20px;
+
+      border-right: 1px solid rgba(255,255,255,.07);
+
+      text-align: center;
+
+      transition: background .3s ease;
+    }
+
+    .command:last-child {
+      border-right: none;
+    }
+
+    .command:hover {
+      background: rgba(255,30,45,.035);
+    }
+
+    .command-icon {
+      margin-bottom: 16px;
+      font-size: 37px;
+      transition: .3s ease;
+    }
+
+    .command:hover .command-icon {
+      transform:
+        scale(1.18)
+        translateY(-4px);
+    }
+
+    .command-code {
+      margin-bottom: 10px;
+
+      color: var(--red);
+
+      font-family: monospace;
+
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .command p {
+      max-width: 170px;
+
+      color: #78818d;
+
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .command-copy {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+
+      width: 27px;
+      height: 27px;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 4px;
+
+      color: #6d7580;
+      background: transparent;
+
+      cursor: pointer;
+
+      transition: .2s ease;
+    }
+
+    .command-copy:hover {
+      color: white;
+      border-color: rgba(255,30,45,.4);
+    }
+
+    /* ==========================================
+       WORLD
+    ========================================== */
+
+    .world-section {
+      background:
+        radial-gradient(
+          circle at 50% 25%,
+          rgba(255,30,45,.035),
+          transparent 42%
+        );
+    }
+
+    .world-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 18px;
+    }
+
+    .world-card {
+      min-height: 330px;
+
+      position: relative;
+      overflow: hidden;
+
+      display: flex;
+      align-items: flex-end;
+
+      padding: 36px;
+
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.025),
+          transparent 60%
+        ),
+        #080d13;
+
+      transition:
+        transform .35s cubic-bezier(.16,1,.3,1),
+        border-color .35s ease,
+        box-shadow .35s ease;
+    }
+
+    .world-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,30,45,.42);
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.35),
+        0 0 35px rgba(255,30,45,.06);
+    }
+
+    .world-card::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          transparent 20%,
+          rgba(255,255,255,.025),
+          transparent 70%
+        );
+
+      transform: translateX(-100%);
+      transition: transform .8s ease;
+    }
+
+    .world-card:hover::after {
+      transform: translateX(100%);
+    }
+
+    .world-lines {
+      position: absolute;
+      inset: 0;
+      opacity: .13;
+
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.16) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.16) 1px,
+          transparent 1px
+        );
+
+      background-size: 34px 34px;
+
+      mask-image:
+        linear-gradient(
+          to top,
+          black,
+          transparent
+        );
+    }
+
+    .world-glow {
+      position: absolute;
+
+      width: 220px;
+      height: 220px;
+
+      border-radius: 50%;
+
+      filter: blur(70px);
+
+      pointer-events: none;
+
+      transition: transform .5s ease;
+    }
+
+    .red-glow {
+      right: -40px;
+      top: -40px;
+      background: rgba(255,30,45,.17);
+    }
+
+    .green-glow {
+      right: -40px;
+      top: -40px;
+      background: rgba(0,255,185,.09);
+    }
+
+    .world-card:hover .world-glow {
+      transform: scale(1.35);
+    }
+
+    .world-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    .world-icon {
+      width: 48px;
+      height: 48px;
+
+      display: grid;
+      place-items: center;
+
+      margin-bottom: 18px;
+
+      color: var(--red);
+      font-size: 22px;
+
+      border: 1px solid rgba(255,30,45,.25);
+      border-radius: 7px;
+
+      background: rgba(255,30,45,.06);
+
+      transition:
+        transform .3s ease,
+        background .3s ease;
+    }
+
+    .world-card:hover .world-icon {
+      transform:
+        rotate(-8deg)
+        scale(1.08);
+
+      background: rgba(255,30,45,.12);
+    }
+
+    .green-icon {
+      color: var(--green);
+      border-color: rgba(49,231,170,.2);
+      background: rgba(49,231,170,.05);
+    }
+
+    .world-number {
+      margin-bottom: 10px;
+
+      color: var(--red);
+
+      font-family: var(--pixel);
+      font-size: 28px;
+
+      text-shadow:
+        0 0 20px rgba(255,30,45,.18);
+    }
+
+    .world-content h3 {
+      margin-bottom: 13px;
+
+      font-family: var(--pixel);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .world-content p {
+      max-width: 500px;
+
+      color: var(--muted);
+
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .world-tag {
+      display: inline-block;
+
+      margin-top: 18px;
+      padding: 7px 10px;
+
+      border: 1px solid rgba(255,30,45,.2);
+      border-radius: 4px;
+
+      color: #ff6873;
+      background: rgba(255,30,45,.045);
+
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+    }
+
+    .green-tag {
+      color: #48e9b0;
+      border-color: rgba(49,231,170,.18);
+      background: rgba(49,231,170,.035);
+    }
+
+    /* ==========================================
+       WORLD STATS
+    ========================================== */
+
+    .world-stats {
+      min-height: 105px;
+      margin-top: 18px;
+
+      display: grid;
+
+      grid-template-columns:
+        1fr auto
+        1fr auto
+        1fr auto
+        1fr;
+
+      align-items: center;
+
+      padding: 20px 28px;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 9px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,.025),
+          rgba(255,255,255,.01)
+        );
+    }
+
+    .world-stat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid rgba(255,30,45,.16);
+      border-radius: 6px;
+
+      color: var(--red);
+      background: rgba(255,30,45,.06);
+
+      font-size: 16px;
+    }
+
+    .world-stat strong {
+      display: block;
+
+      margin-bottom: 5px;
+
+      color: white;
+
+      font-family: var(--pixel);
+      font-size: 13px;
+    }
+
+    .world-stat span {
+      display: block;
+
+      color: #666f7c;
+
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,.08);
+    }
+
+    /* ==========================================
+       CTA
+    ========================================== */
+
+    .cta {
+      position: relative;
+      overflow: hidden;
+
+      border-top: 1px solid rgba(255,255,255,.07);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(255,30,45,.12),
+          transparent 35%
+        ),
+        #07090d;
+    }
+
+    .cta::before,
+    .cta::after {
+      content: "";
+
+      position: absolute;
+
+      width: 300px;
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--red),
+          transparent
+        );
+
+      animation: scan 5s linear infinite;
+    }
+
+    .cta::before {
+      top: 20px;
+      left: -300px;
+    }
+
+    .cta::after {
+      right: -300px;
+      bottom: 20px;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes scan {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(calc(100vw + 600px));
+      }
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 2;
+
+      padding: 105px 20px;
+
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 16px;
+
+      font-family: var(--pixel);
+
+      font-size:
+        clamp(21px,4vw,37px);
+
+      line-height: 1.6;
+    }
+
+    .cta p {
+      max-width: 500px;
+
+      margin:
+        auto auto 28px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* CTA IP */
+
+    .cta-server-ip {
+      width: fit-content;
+
+      display: flex;
+      align-items: center;
+
+      gap: 14px;
+
+      margin: 0 auto 10px;
+      padding: 12px 16px;
+
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 6px;
+
+      background: rgba(255,255,255,.035);
+
+      transition:
+        border-color .25s ease,
+        background .25s ease,
+        transform .25s ease;
+    }
+
+    .cta-server-ip:hover {
+      border-color: rgba(255,30,45,.45);
+      background: rgba(255,30,45,.04);
+      transform: translateY(-2px);
+    }
+
+    .cta-ip-label {
+      color: #69727f;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+
+    .cta-ip-value {
+      color: white;
+      font-family: monospace;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .cta-ip-copy {
+      width: 30px;
+      height: 30px;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 4px;
+
+      color: var(--red);
+      background: rgba(255,255,255,.025);
+
+      cursor: pointer;
+
+      transition: .2s ease;
+    }
+
+    .cta-ip-copy:hover {
+      color: white;
+      background: rgba(255,30,45,.1);
+      border-color: rgba(255,30,45,.4);
+    }
+
+    .cta-ip-message {
+      margin-bottom: 20px;
+
+      color: #55ec98;
+      font-size: 10px;
+
+      opacity: 0;
+
+      transform: translateY(-4px);
+
+      transition: .25s ease;
+    }
+
+    .cta-ip-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+
+      padding: 15px 22px;
+
+      border-radius: 5px;
+
+      font-size: 11px;
+      font-weight: 900;
+
+      text-transform: uppercase;
+
+      transition: .25s ease;
+    }
+
+    .cta-button.red {
+      background: var(--red);
+      box-shadow: 0 0 25px rgba(255,30,45,.2);
+    }
+
+    .cta-button.outline {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.025);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+    }
+
+    .cta-button.red:hover {
+      box-shadow: 0 0 38px rgba(255,30,45,.4);
+    }
+
+    /* ==========================================
+       FOOTER
+    ========================================== */
+
+    footer {
+      padding: 30px 0;
+      background: #030508;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-logo {
+      font-family: var(--pixel);
+      font-size: 13px;
+    }
+
+    .footer-logo span {
+      color: var(--red);
+    }
+
+    .copyright {
+      color: #5d6672;
+      font-size: 11px;
+    }
+
+    .socials {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .social {
+      width: 40px;
+      height: 40px;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 6px;
+
+      background: rgba(255,255,255,.025);
+
+      color: #929aa6;
+
+      transition:
+        transform .25s ease,
+        color .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .social:hover {
+      transform: translateY(-4px);
+
+      color: white;
+
+      border-color: rgba(255,30,45,.5);
+      background: rgba(255,30,45,.08);
+
+      box-shadow:
+        0 8px 25px rgba(255,30,45,.12);
+    }
+
+    .social img {
+      display: block;
+      width: 19px;
+      height: 19px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: .7;
+      transition: .25s ease;
+    }
+
+    .social:hover img {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    /* ==========================================
+       RIPPLE
+    ========================================== */
+
+    .ripple-button {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple {
+      position: absolute;
+
+      border-radius: 50%;
+
+      background: rgba(255,255,255,.25);
+
+      transform: scale(0);
+
+      animation: ripple .6s linear;
+
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================
+       MOBILE
+    ========================================== */
+
+    @media (max-width: 1050px) {
+
+      .feature-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .life-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .life-arrow {
+        transform: rotate(90deg);
+      }
+
+      .command-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .command:nth-child(2) {
+        border-right: none;
+      }
+
+      .command:nth-child(-n+2) {
+        border-bottom: 1px solid rgba(255,255,255,.07);
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      .container {
+        width: min(100% - 28px,1180px);
+      }
+
+      .navbar {
+        min-height: 67px;
+      }
+
+      .logo {
+        font-size: 13px;
+      }
+
+      .nav-discord {
+        display: none;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+
+        top: 67px;
+        left: 12px;
+        right: 12px;
+
+        display: none;
+
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 18px;
+
+        padding: 20px;
+
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 8px;
+
+        background: rgba(4,7,11,.97);
+
+        box-shadow:
+          0 25px 70px rgba(0,0,0,.45);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        font-size: 12px;
+      }
+
+      .nav-links a.active::after {
+        display: none;
+      }
+
+      .hero {
+        min-height: 760px;
+      }
+
+      .hero-content {
+        padding-top: 100px;
+      }
+
+      .hero-logo {
+        font-size: clamp(30px,9vw,56px);
+        letter-spacing: -3px;
+      }
+
+      .hero-description {
+        font-size: 14px;
+      }
+
+      .hero-server-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .server-ip {
+        width: 100%;
+      }
+
+      .hero-scroll {
+        display: none;
+      }
+
+      .feature-grid,
+      .world-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .command-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .command {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,.07);
+      }
+
+      .command:last-child {
+        border-bottom: none;
+      }
+
+      .section {
+        padding: 75px 0;
+      }
+
+      .section-title {
+        margin-bottom: 38px;
+      }
+
+      .section-title h2 {
+        font-size: 16px;
+      }
+
+      .section-kicker {
+        font-size: 9px;
+      }
+
+      .life-panel {
+        padding: 24px 15px;
+      }
+
+      .world-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 22px;
+      }
+
+      .stat-divider {
+        display: none;
+      }
+
+      .world-stat {
+        justify-content: flex-start;
+      }
+
+      .cta-server-ip {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .cta-inner {
+        padding: 75px 15px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <div id="particles"></div>
+
+
+  <!-- ==========================================
+       HEADER
+  ========================================== -->
+
+  <header id="header">
+
+    <div class="container navbar">
+
+      <a href="#home" class="logo">
+        <span>RECHARGE</span> SMP
+      </a>
+
+      <button
+        class="mobile-toggle"
+        id="mobileToggle"
+        aria-label="Open navigation"
+      >
+        ☰
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+
+        <a href="#home" class="active">
+          HOME
+        </a>
+
+        <a href="#features">
+          ABOUT
+        </a>
+
+        <a href="#recharge">
+          LIVES
+        </a>
+
+        <a href="#commands">
+          COMMANDS
+        </a>
+
+        <a href="#world">
+          WORLD
+        </a>
+
+        <a href="#join">
+          JOIN
+        </a>
+
+      </nav>
+
+      <a
+        href="https://discord.gg/YKBw6ZWfEM"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-discord ripple-button"
+      >
+        DISCORD
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <!-- ==========================================
+         HERO
+    ========================================== -->
+
+    <section class="hero" id="home">
+
+      <div class="hero-grid"></div>
+
+      <div class="hero-orb orb-one"></div>
+      <div class="hero-orb orb-two"></div>
+
+      <div class="container hero-content">
+
+        <h1 class="hero-logo">
+
+          <span class="red">
+            RECHARGE
+          </span>
+
+          <span class="white">
+            SMP
+          </span>
+
+        </h1>
+
+
+        <div class="hero-tagline">
+
+          <span>SURVIVE</span>
+
+          <span class="dot">•</span>
+
+          <span>RECHARGE</span>
+
+          <span class="dot">•</span>
+
+          <span>EXPLORE</span>
+
+          <span class="dot">•</span>
+
+          <span>TOGETHER</span>
+
+        </div>
+
+
+        <p class="hero-description">
+
+          A survival server where every death matters.
+          Start with three lives, lose them when you die,
+          and recharge your lost life after eight hours.
+
+        </p>
+
+
+        <div class="hero-server-row">
+
+          <div
+            class="server-ip ripple-button"
+            id="copyIp"
+            title="Click to copy server IP"
+          >
+
+            <span class="ip-label">
+              SERVER IP
+            </span>
+
+            <span class="ip-value">
+              rechargesmp.xyz
+            </span>
+
+            <span class="copy-icon">
+              ⧉
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="copy-message"
+          id="copyMessage"
+        >
+          ✓ Server IP copied!
+        </div>
+
+      </div>
+
+
+      <div class="hero-scroll">
+
+        SCROLL
+
+        <span class="scroll-line"></span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         FEATURES
+    ========================================== -->
+
+    <section class="section features" id="features">
+
+      <div class="container relative">
+
+        <div class="section-title reveal">
+
+          <div class="section-kicker">
+            WHY RECHARGE
+          </div>
+
+          <h2>
+            BUILT DIFFERENT
+          </h2>
+
+          <p>
+            A simple survival experience with mechanics
+            that make every decision matter.
+          </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+          <article class="feature-card reveal">
+
+            <span class="feature-number">
+              01
+            </span>
+
+            <div class="feature-icon">
+              ❤️
+            </div>
+
+            <h3>
+              3 LIVES
+            </h3>
+
+            <p>
+              You start with three lives.
+              Every death costs one.
+              Protect them and think before you fight.
+            </p>
+
+            <div class="feature-line">
+              <span></span>
+            </div>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <span class="feature-number">
+              02
+            </span>
+
+            <div class="feature-icon">
+              ⏱️
+            </div>
+
+            <h3>
+              8 HOUR RECHARGE
+            </h3>
+
+            <p>
+              Losing a life isn't permanent.
+              Wait eight hours and recharge it.
+            </p>
+
+            <div class="feature-line">
+              <span></span>
+            </div>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <span class="feature-number">
+              03
+            </span>
+
+            <div class="feature-icon">
+              🌎
+            </div>
+
+            <h3>
+              50K RTP ZONE
+            </h3>
+
+            <p>
+              Explore a huge random teleport zone
+              and discover somewhere completely new.
+            </p>
+
+            <div class="feature-line">
+              <span></span>
+            </div>
+
+          </article>
+
+
+          <article class="feature-card reveal">
+
+            <span class="feature-number">
+              04
+            </span>
+
+            <div class="feature-icon">
+              ⬛
+            </div>
+
+            <h3>
+              100K BORDER
+            </h3>
+
+            <p>
+              A massive world gives you space for
+              bases, teams, adventures and chaos.
+            </p>
+
+            <div class="feature-line">
+              <span></span>
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         LIFE SYSTEM
+    ========================================== -->
+
+    <section class="section recharge-section" id="recharge">
+
+      <div class="container relative">
+
+        <div class="section-title reveal">
+
+          <div class="section-kicker">
+            THE MAIN MECHANIC
+          </div>
+
+          <h2>
+            HOW RECHARGE WORKS
+          </h2>
+
+          <p>
+            Your lives are valuable.
+            Here's exactly how the recharge system works.
+          </p>
+
+        </div>
+
+
+        <div class="life-panel reveal">
+
+          <div class="life-top">
+
+            <h3>
+              THE LIFE CYCLE
+            </h3>
+
+            <p>
+              Lose a life → wait → recharge → keep playing.
+            </p>
+
+          </div>
+
+
+          <div class="life-flow">
+
+            <div class="life-step">
+
+              <div class="life-icon">
+                ❤️❤️❤️
+              </div>
+
+              <h4>
+                3 LIVES
+              </h4>
+
+              <p>
+                Everyone starts here.
+              </p>
+
+            </div>
+
+
+            <div class="life-arrow">
+              →
+            </div>
+
+
+            <div class="life-step">
+
+              <div class="life-icon">
+                💀
+              </div>
+
+              <h4>
+                DEATH
+              </h4>
+
+              <p>
+                One life is lost.
+              </p>
+
+            </div>
+
+
+            <div class="life-arrow">
+              →
+            </div>
+
+
+            <div class="life-step">
+
+              <div class="life-icon">
+                ❤️❤️
+              </div>
+
+              <h4>
+                2 LIVES
+              </h4>
+
+              <p>
+                Play more carefully.
+              </p>
+
+            </div>
+
+
+            <div class="life-arrow">
+              →
+            </div>
+
+
+            <div class="life-step">
+
+              <div class="life-icon">
+                ⏱️
+              </div>
+
+              <h4>
+                8 HOURS
+              </h4>
+
+              <p>
+                Recharge timer begins.
+              </p>
+
+            </div>
+
+
+            <div class="life-arrow">
+              →
+            </div>
+
+
+            <div class="life-step">
+
+              <div class="life-icon">
+                ❤️❤️❤️
+              </div>
+
+              <h4>
+                RECHARGED
+              </h4>
+
+              <p>
+                Back to three lives.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         COMMANDS
+    ========================================== -->
+
+    <section class="section commands-section" id="commands">
+
+      <div class="container relative">
+
+        <div class="section-title reveal">
+
+          <div class="section-kicker">
+            IN GAME
+          </div>
+
+          <h2>
+            USEFUL COMMANDS
+          </h2>
+
+          <p>
+            Everything you need to navigate Recharge SMP.
+          </p>
+
+        </div>
+
+
+        <div class="terminal reveal">
+
+          <div class="terminal-head">
+
+            <div class="terminal-dots">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+            </div>
+
+            <div class="terminal-title">
+              recharge@server:~$
+            </div>
+
+          </div>
+
+
+          <div class="command-grid">
+
+            <article class="command">
+
+              <button
+                class="command-copy"
+                data-command="/home"
+                title="Copy command"
+              >
+                ⧉
+              </button>
+
+              <div class="command-icon">
+                🏠
+              </div>
+
+              <div class="command-code">
+                /home
+              </div>
+
+              <p>
+                Teleport back to your home.
+              </p>
+
+            </article>
+
+
+            <article class="command">
+
+              <button
+                class="command-copy"
+                data-command="/team"
+                title="Copy command"
+              >
+                ⧉
+              </button>
+
+              <div class="command-icon">
+                👥
+              </div>
+
+              <div class="command-code">
+                /team
+              </div>
+
+              <p>
+                Manage your team and play together.
+              </p>
+
+            </article>
+
+
+            <article class="command">
+
+              <button
+                class="command-copy"
+                data-command="/rtp"
+                title="Copy command"
+              >
+                ⧉
+              </button>
+
+              <div class="command-icon">
+                🌎
+              </div>
+
+              <div class="command-code">
+                /rtp
+              </div>
+
+              <p>
+                Randomly teleport into the world.
+              </p>
+
+            </article>
+
+
+            <article class="command">
+
+              <button
+                class="command-copy"
+                data-command="/tpa"
+                title="Copy command"
+              >
+                ⧉
+              </button>
+
+              <div class="command-icon">
+                🧑
+              </div>
+
+              <div class="command-code">
+                /tpa
+              </div>
+
+              <p>
+                Request a teleport to another player.
+              </p>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         WORLD
+    ========================================== -->
+
+    <section class="section world-section" id="world">
+
+      <div class="container relative">
+
+        <div class="section-title reveal">
+
+          <div class="section-kicker">
+            THE WORLD
+          </div>
+
+          <h2>
+            ROOM TO EXPLORE
+          </h2>
+
+          <p>
+            A huge world with plenty of space for bases,
+            teams, exploration and everything in between.
+          </p>
+
+        </div>
+
+
+        <div class="world-grid">
+
+          <article class="world-card reveal">
+
+            <div class="world-lines"></div>
+
+            <div class="world-glow red-glow"></div>
+
+            <div class="world-content">
+
+              <div class="world-icon">
+                <span>⬢</span>
+              </div>
+
+              <div class="world-number">
+                100K
+              </div>
+
+              <h3>
+                WORLD BORDER
+              </h3>
+
+              <p>
+                A huge world built for exploration,
+                bases, teams and adventure.
+              </p>
+
+              <div class="world-tag">
+                MASSIVE WORLD
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <article class="world-card reveal">
+
+            <div class="world-lines"></div>
+
+            <div class="world-glow green-glow"></div>
+
+            <div class="world-content">
+
+              <div class="world-icon green-icon">
+                <span>✦</span>
+              </div>
+
+              <div class="world-number">
+                50K
+              </div>
+
+              <h3>
+                RTP ZONE
+              </h3>
+
+              <p>
+                Randomly teleport anywhere inside
+                the 50,000 block RTP zone.
+              </p>
+
+              <div class="world-tag green-tag">
+                EXPLORE ANYWHERE
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+
+        <div class="world-stats reveal">
+
+          <div class="world-stat">
+
+            <div class="stat-icon">
+              ❤
+            </div>
+
+            <div>
+              <strong>3</strong>
+              <span>PLAYER LIVES</span>
+            </div>
+
+          </div>
+
+
+          <div class="stat-divider"></div>
+
+
+          <div class="world-stat">
+
+            <div class="stat-icon">
+              ◷
+            </div>
+
+            <div>
+              <strong>8H</strong>
+              <span>RECHARGE TIME</span>
+            </div>
+
+          </div>
+
+
+          <div class="stat-divider"></div>
+
+
+          <div class="world-stat">
+
+            <div class="stat-icon">
+              ⌖
+            </div>
+
+            <div>
+              <strong>50K</strong>
+              <span>RTP RANGE</span>
+            </div>
+
+          </div>
+
+
+          <div class="stat-divider"></div>
+
+
+          <div class="world-stat">
+
+            <div class="stat-icon">
+              ◇
+            </div>
+
+            <div>
+              <strong>100K</strong>
+              <span>WORLD BORDER</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         CTA
+    ========================================== -->
+
+    <section class="cta" id="join">
+
+      <div class="container cta-inner">
+
+        <div class="section-kicker reveal">
+          READY?
+        </div>
+
+        <h2 class="reveal">
+          YOUR ADVENTURE STARTS HERE.
+        </h2>
+
+        <p class="reveal">
+          Join the community, connect with players,
+          and start building your legacy on Recharge SMP.
+        </p>
+
+
+        <div class="cta-server-ip reveal">
+
+          <span class="cta-ip-label">
+            SERVER IP
+          </span>
+
+          <span class="cta-ip-value">
+            rechargesmp.xyz
+          </span>
+
+          <button
+            class="cta-ip-copy"
+            id="copyCtaIp"
+            type="button"
+            title="Copy server IP"
+          >
+            ⧉
+          </button>
+
+        </div>
+
+
+        <div
+          class="cta-ip-message"
+          id="ctaIpMessage"
+        >
+          ✓ Server IP copied!
+        </div>
+
+
+        <div class="cta-buttons reveal">
+
+          <a
+            href="https://discord.gg/YKBw6ZWfEM"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cta-button red ripple-button"
+          >
+            JOIN DISCORD
+          </a>
+
+          <a
+            href="#home"
+            class="cta-button outline ripple-button"
+          >
+            ↑ BACK TO TOP
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ==========================================
+       FOOTER
+  ========================================== -->
+
+  <footer>
+
+    <div class="container footer-inner">
+
+      <div class="footer-logo">
+        <span>RECHARGE</span> SMP
+      </div>
+
+      <div class="copyright">
+        © 2026 Recharge SMP
+      </div>
+
+
+      <div class="socials">
+
+        <!-- DISCORD -->
+        <a
+          href="https://discord.gg/YKBw6ZWfEM"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social"
+          aria-label="Discord"
+          title="Discord"
+        >
+          <img
+            src="https://cdn.simpleicons.org/discord/ffffff"
+            alt="Discord"
+          >
+        </a>
+
+
+        <!-- YOUTUBE -->
+        <a
+          href="https://www.youtube.com/@qlovaa"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social"
+          aria-label="YouTube"
+          title="YouTube"
+        >
+          <img
+            src="https://cdn.simpleicons.org/youtube/ffffff"
+            alt="YouTube"
+          >
+        </a>
+
+
+        <!-- TIKTOK -->
+        <a
+          href="https://www.tiktok.com/@qlovamc"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social"
+          aria-label="TikTok"
+          title="TikTok"
+        >
+          <img
+            src="https://cdn.simpleicons.org/tiktok/ffffff"
+            alt="TikTok"
+          >
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    /* ==========================================
+       PARTICLES
+    ========================================== */
+
+    const particleContainer =
+      document.getElementById("particles");
+
+    for (let i = 0; i < 45; i++) {
+
+      const particle =
+        document.createElement("div");
+
+      particle.className = "particle";
+
+      particle.style.left =
+        Math.random() * 100 + "%";
+
+      particle.style.animationDuration =
+        (6 + Math.random() * 10) + "s";
+
+      particle.style.animationDelay =
+        (-Math.random() * 15) + "s";
+
+      particle.style.opacity =
+        0.15 + Math.random() * 0.7;
+
+      particleContainer.appendChild(
+        particle
+      );
+    }
+
+
+    /* ==========================================
+       HEADER
+    ========================================== */
+
+    const header =
+      document.getElementById("header");
+
+    window.addEventListener("scroll", () => {
+
+      if (window.scrollY > 30) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+
+    });
+
+
+    /* ==========================================
+       SCROLL PROGRESS
+    ========================================== */
+
+    const scrollProgress =
+      document.getElementById("scrollProgress");
+
+    window.addEventListener("scroll", () => {
+
+      const scrollTop =
+        window.scrollY;
+
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+      const progress =
+        height > 0
+          ? (scrollTop / height) * 100
+          : 0;
+
+      scrollProgress.style.width =
+        progress + "%";
+
+    });
+
+
+    /* ==========================================
+       REVEAL ON SCROLL
+    ========================================== */
+
+    const revealElements =
+      document.querySelectorAll(".reveal");
+
+    const revealObserver =
+      new IntersectionObserver(
+        (entries) => {
+
+          entries.forEach((entry) => {
+
+            if (entry.isIntersecting) {
+
+              entry.target.classList.add(
+                "visible"
+              );
+
+              revealObserver.unobserve(
+                entry.target
+              );
+
+            }
+
+          });
+
+        },
+        {
+          threshold: 0.12
+        }
+      );
+
+    revealElements.forEach((element) => {
+      revealObserver.observe(element);
+    });
+
+
+    /* ==========================================
+       FEATURE CARD MOUSE GLOW
+    ========================================== */
+
+    document
+      .querySelectorAll(".feature-card")
+      .forEach((card) => {
+
+        card.addEventListener(
+          "mousemove",
+          (event) => {
+
+            const rect =
+              card.getBoundingClientRect();
+
+            const x =
+              event.clientX - rect.left;
+
+            const y =
+              event.clientY - rect.top;
+
+            card.style.setProperty(
+              "--mx",
+              x + "px"
+            );
+
+            card.style.setProperty(
+              "--my",
+              y + "px"
+            );
+
+          }
+        );
+
+      });
+
+
+    /* ==========================================
+       MOBILE MENU
+    ========================================== */
+
+    const mobileToggle =
+      document.getElementById("mobileToggle");
+
+    const navLinks =
+      document.getElementById("navLinks");
+
+    mobileToggle.addEventListener(
+      "click",
+      () => {
+
+        navLinks.classList.toggle("open");
+
+        document.body.classList.toggle(
+          "menu-open"
+        );
+
+      }
+    );
+
+    document
+      .querySelectorAll(".nav-links a")
+      .forEach((link) => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            navLinks.classList.remove(
+              "open"
+            );
+
+            document.body.classList.remove(
+              "menu-open"
+            );
+
+          }
+        );
+
+      });
+
+
+    /* ==========================================
+       ACTIVE NAVIGATION
+    ========================================== */
+
+    const sections =
+      document.querySelectorAll(
+        "main section[id]"
+      );
+
+    const navItems =
+      document.querySelectorAll(
+        ".nav-links a"
+      );
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        let current = "";
+
+        sections.forEach((section) => {
+
+          const top =
+            section.offsetTop - 180;
+
+          if (window.scrollY >= top) {
+            current = section.id;
+          }
+
+        });
+
+        navItems.forEach((item) => {
+
+          item.classList.remove("active");
+
+          if (
+            item.getAttribute("href") ===
+            "#" + current
+          ) {
+            item.classList.add("active");
+          }
+
+        });
+
+      }
+    );
+
+
+    /* ==========================================
+       COPY HERO IP
+    ========================================== */
+
+    const copyIp =
+      document.getElementById("copyIp");
+
+    const copyMessage =
+      document.getElementById("copyMessage");
+
+    copyIp.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await navigator.clipboard.writeText(
+            "rechargesmp.xyz"
+          );
+
+          copyMessage.classList.add("show");
+
+          setTimeout(() => {
+
+            copyMessage.classList.remove(
+              "show"
+            );
+
+          }, 1800);
+
+        } catch (error) {
+
+          alert(
+            "Server IP: rechargesmp.xyz"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ==========================================
+       COPY CTA IP
+    ========================================== */
+
+    const copyCtaIp =
+      document.getElementById("copyCtaIp");
+
+    const ctaIpMessage =
+      document.getElementById("ctaIpMessage");
+
+    copyCtaIp.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await navigator.clipboard.writeText(
+            "rechargesmp.xyz"
+          );
+
+          ctaIpMessage.classList.add(
+            "show"
+          );
+
+          setTimeout(() => {
+
+            ctaIpMessage.classList.remove(
+              "show"
+            );
+
+          }, 1800);
+
+        } catch (error) {
+
+          alert(
+            "Server IP: rechargesmp.xyz"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ==========================================
+       COMMAND COPY
+    ========================================== */
+
+    document
+      .querySelectorAll(".command-copy")
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+          async () => {
+
+            const command =
+              button.dataset.command;
+
+            try {
+
+              await navigator.clipboard.writeText(
+                command
+              );
+
+              const original =
+                button.textContent;
+
+              button.textContent = "✓";
+
+              setTimeout(() => {
+
+                button.textContent =
+                  original;
+
+              }, 1000);
+
+            } catch (error) {
+
+              alert(command);
+
+            }
+
+          }
+        );
+
+      });
+
+
+    /* ==========================================
+       RIPPLE EFFECT
+    ========================================== */
+
+    document
+      .querySelectorAll(".ripple-button")
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+          function(event) {
+
+            const circle =
+              document.createElement("span");
+
+            const diameter =
+              Math.max(
+                this.clientWidth,
+                this.clientHeight
+              );
+
+            const radius =
+              diameter / 2;
+
+            circle.style.width =
+              circle.style.height =
+              diameter + "px";
+
+            circle.style.left =
+              event.clientX -
+              this.getBoundingClientRect().left -
+              radius +
+              "px";
+
+            circle.style.top =
+              event.clientY -
+              this.getBoundingClientRect().top -
+              radius +
+              "px";
+
+            circle.classList.add("ripple");
+
+            const existingRipple =
+              this.querySelector(".ripple");
+
+            if (existingRipple) {
+              existingRipple.remove();
+            }
+
+            this.appendChild(circle);
+
+          }
+        );
+
+      });
+
+
+    /* ==========================================
+       HERO PARALLAX
+    ========================================== */
+
+    const heroGrid =
+      document.querySelector(".hero-grid");
+
+    const orbOne =
+      document.querySelector(".orb-one");
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        const offset =
+          window.scrollY;
+
+        if (offset < 900) {
+
+          heroGrid.style.transform =
+            `translateY(${offset * .08}px)`;
+
+          orbOne.style.transform =
+            `translateY(${offset * .04}px)`;
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
