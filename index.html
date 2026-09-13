@@ -982,6 +982,116 @@
       border-color: rgba(255,30,45,.4);
     }
 
+
+    /* ==========================================
+       NEWS
+    ========================================== */
+
+    .news-section {
+      background: #05080c;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    .news-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 10px;
+      background:
+        linear-gradient(145deg, rgba(255,30,45,.045), transparent 60%),
+        #080d13;
+      transition: transform .35s cubic-bezier(.16,1,.3,1), border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .news-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      opacity: .7;
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,30,45,.4);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35), 0 0 30px rgba(255,30,45,.06);
+    }
+
+    .news-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .news-tag {
+      color: var(--red);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+
+    .news-date {
+      color: #69727e;
+      font-family: monospace;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .news-icon {
+      margin-bottom: 18px;
+      font-size: 38px;
+    }
+
+    .news-card h3 {
+      margin-bottom: 12px;
+      color: white;
+      font-family: var(--pixel);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .news-card p {
+      min-height: 70px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .news-status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 22px;
+      padding-top: 17px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      color: #8c96a3;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px rgba(255,30,45,.7);
+    }
+
     /* ==========================================
        WORLD
     ========================================== */
@@ -1659,6 +1769,14 @@
 
     @media (max-width: 760px) {
 
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .news-card p {
+        min-height: auto;
+      }
+
       .container {
         width: min(100% - 28px,1180px);
       }
@@ -1862,6 +1980,10 @@
 
         <a href="#world">
           WORLD
+        </a>
+
+        <a href="#news">
+          NEWS
         </a>
 
         <a href="#join">
@@ -2425,6 +2547,90 @@
             </article>
 
           </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         NEWS
+    ========================================== -->
+
+    <section class="section news-section" id="news">
+
+      <div class="container relative">
+
+        <div class="section-title reveal">
+
+          <div class="section-kicker">
+            LATEST UPDATES
+          </div>
+
+          <h2>
+            RECHARGE NEWS
+          </h2>
+
+          <p>
+            Stay up to date with server releases, updates, events and important
+            announcements from Recharge SMP.
+          </p>
+
+        </div>
+
+        <div class="news-grid">
+
+          <article class="news-card reveal">
+
+            <div class="news-card-top">
+              <span class="news-tag">SERVER NEWS</span>
+              <span class="news-date">TBA</span>
+            </div>
+
+            <div class="news-icon">🚀</div>
+
+            <h3>
+              SERVER RELEASE
+            </h3>
+
+            <p>
+              Recharge SMP is getting ready to launch. The official server release
+              date is currently unknown and will be announced when confirmed.
+            </p>
+
+            <div class="news-status">
+              <span class="status-dot"></span>
+              RELEASE DATE: UNKNOWN
+            </div>
+
+          </article>
+
+          <article class="news-card reveal">
+
+            <div class="news-card-top">
+              <span class="news-tag">UPDATES</span>
+              <span class="news-date">COMING SOON</span>
+            </div>
+
+            <div class="news-icon">⚡</div>
+
+            <h3>
+              MORE UPDATES
+            </h3>
+
+            <p>
+              New information about Recharge SMP will be posted here as the server
+              gets closer to release.
+            </p>
+
+            <div class="news-status">
+              <span class="status-dot"></span>
+              STAY TUNED
+            </div>
+
+          </article>
 
         </div>
 
