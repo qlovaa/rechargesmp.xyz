@@ -1,96 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1b1b1b">
-  <meta name="description" content="Recharge SMP — a survival Minecraft server where every life matters.">
-  <title>Recharge SMP</title>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RechargeSMP — Make every life count.</title>
+  <meta name="description" content="Three lives. A world of possibilities. Join RechargeSMP at rechargesmp.xyz. Check live player counts, discover the server, and find out how to play.">
+  <meta name="theme-color" content="#252628"><meta property="og:title" content="RechargeSMP — Make every life count.">
+  <meta property="og:description" content="Three lives. One more story. Play Minecraft survival at rechargesmp.xyz.">
+  <meta property="og:type" content="website"><meta property="og:url" content="https://rechargesmp-server.turkeyaiverify.chatgpt.site/">
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="preload" as="font" href="assets/fonts/jersey-10.ttf" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home" aria-label="RechargeSMP home"><img src="assets/mark.svg" alt="" width="31" height="31"><span>RECHARGE<span class="brand-smp"> SMP</span></span></a>
+      <nav class="desktop-nav" aria-label="Main navigation"><a class="nav-link active" href="#home">Home</a><a class="nav-link" href="#about">The server</a><a class="nav-link" href="#status">Live status</a><a class="nav-link" href="#join">How to join</a></nav>
+      <div class="header-actions"><a class="header-live" href="#status"><span class="status-dot" data-status-dot></span><span data-header-status>Checking status</span></a><button class="ip-button" data-copy-ip aria-label="Copy server address rechargesmp.xyz"><span class="tiny-label">IP</span>rechargesmp.xyz<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h11v11H9zM4 15H3V3h12v1"/></svg></button></div>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation"><span></span><span></span></button>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden><a href="#home">Home</a><a href="#about">The server</a><a href="#status">Live status</a><a href="#join">How to join</a><button data-open-join>Play RechargeSMP ↗</button></nav>
+  </header>
 
-  <!--
-    QUICK SETUP
-    1. Put your own Minecraft screenshot beside this file and name it hero.jpg.
-    2. Change the Discord URL and server IP in the CONFIG section near the bottom.
-  -->
+  <main id="main">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-layout wrap">
+        <div class="hero-panel">
+          <div class="hero-topline"><span class="eyebrow">A MINECRAFT SURVIVAL STORY</span><img class="hero-mark" src="assets/mark.svg" alt="" width="44" height="44"></div>
+          <a class="player-badge" href="#status"><span class="status-dot" data-status-dot></span><span data-hero-status>Checking players…</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+          <h1 id="hero-title">RECHARGE<br><span>SMP.</span></h1>
+          <p class="hero-tagline">THREE LIVES. ONE MORE STORY.</p>
+          <p class="hero-description">Build a home. Find your people. Make every life count in a survival world that gives you a chance to recharge.</p>
+          <div class="hero-buttons"><button class="button button-red" data-open-join>PLAY NOW <span aria-hidden="true">↗</span></button><a class="text-link" href="#about">Discover the server <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-edition"><span class="square-icon" aria-hidden="true">▦</span> JAVA EDITION <span class="meta-divider">/</span> <span data-server-version>26.3</span></div>
+        </div>
+        <div class="world-note"><span class="world-note-line"></span><span>YOUR NEXT CHAPTER<br>IS OUT THERE.</span><span class="world-note-plus" aria-hidden="true">+</span></div>
+      </div>
+      <div class="hero-bottom wrap"><span>rechargesmp.xyz <span class="small-plus">+</span></span><a href="#about">SCROLL TO EXPLORE <span aria-hidden="true">↓</span></a></div>
+    </section>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231b1b1b'/%3E%3Cpath d='M37 3 12 37h17l-3 24 26-38H35z' fill='%23ee4b61'/%3E%3C/svg%3E">
+    <div class="server-strip"><div class="wrap strip-inner"><span><span class="status-dot" data-status-dot></span><strong data-strip-status>Connecting to the server…</strong></span><span class="strip-center">3 LIVES <b>+</b> 8 HOUR RECHARGE <b>+</b> YOUR STORY</span><button class="strip-copy" data-copy-ip>rechargesmp.xyz <span aria-hidden="true">⧉</span></button></div></div>
 
-  <style>
-    :root {
-      --bg: #181818;
-      --panel: #222222;
-      --panel-2: #292929;
-      --line: #454545;
-      --text: #f4f3ed;
-      --muted: #b8b8b5;
-      --red: #ef5268;
-      --red-dark: #8a2637;
-      --green: #5add8f;
-      --shadow: #090909;
-      --page: 1160px;
-    }
+    <section class="about section wrap" id="about" aria-labelledby="about-title">
+      <div class="section-heading"><div><span class="eyebrow accent">WELCOME TO RECHARGESMP</span><h2 id="about-title">TAKE A RISK.<br>MAKE IT <span class="red">COUNT.</span></h2></div><p>A base worth building. A team worth finding.<br>A survival world worth coming back to.</p></div>
+      <div class="life-story">
+        <div class="life-visual" aria-label="Three lives and an eight-hour recharge"><span class="pixel-label">YOUR SECOND CHANCE, RECHARGED.</span><div class="heart-row"><img src="assets/mark.svg" alt="Life one"><img src="assets/mark.svg" alt="Life two"><img src="assets/mark.svg" alt="Life three"></div><div class="life-meter"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="life-meter-label"><span>ONE LIFE BACK</span><strong>EVERY 8 HOURS ↻</strong></div></div>
+        <div class="life-copy"><span class="section-number">01 / THE RECHARGE</span><h3>THREE LIVES.<br>A FRESH CHANCE.</h3><p>Start with three lives. Every death costs one, and a missing life recharges every eight hours—up to a maximum of three.</p><p>Out of lives? Return when your next life recharges and pick up your story.</p><div class="small-detail"><span class="status-dot is-online"></span>Every comeback starts with a recharge.</div></div>
+      </div>
+      <div class="ways-to-play"><div class="play-feature"><span class="feature-index">02</span><div><h3>MAKE YOUR HOME.</h3><p>Find your corner of the world. Save your home and keep your next adventure close.</p><span class="command-chip">/home</span></div><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 18 20 5l15 13M10 16v19h20V16M17 35V23h7v12"/></svg></div><div class="play-feature"><span class="feature-index">03</span><div><h3>FIND YOUR PEOPLE.</h3><p>Bring friends together with teleport requests and build your next chapter as a team.</p><span class="command-chip">/tpa</span><span class="command-chip">/team</span></div><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M4 30v-6h13v6M23 30v-6h13v6M7 9h7v8H7zM26 9h7v8h-7zM16 19h8"/></svg></div></div>
+    </section>
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-width: 320px;
-      color: var(--text);
-      background: var(--bg);
-      font-family: "Roboto", Arial, sans-serif;
-    }
-    body.menu-open { overflow: hidden; }
-    img { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
-    button { color: inherit; font: inherit; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    button:focus-visible, a:focus-visible { outline: 3px solid #ffe4a3; outline-offset: 4px; }
-    h1, h2, h3, p { margin-top: 0; }
-    section { scroll-margin-top: 86px; }
+    <section class="status-section section" id="status" aria-labelledby="status-title"><div class="wrap status-layout">
+      <div class="status-intro"><span class="eyebrow accent">STRAIGHT FROM THE SERVER</span><h2 id="status-title">YOUR WORLD.<br><span class="accent">RIGHT NOW.</span></h2><p>A little less scrolling.<br>A little more surviving.</p><a class="text-link" href="#join">See you in-game <span aria-hidden="true">↗</span></a></div>
+      <div class="status-board" aria-live="polite" aria-busy="true" id="status-board"><div class="board-top"><span class="board-label"><span class="status-dot" data-status-dot></span><span id="board-state">CHECKING SERVER</span></span><button class="refresh-button" id="refresh-status" aria-label="Refresh server status" title="Refresh status"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v6h-6M4 17v-6h6M19 12a7 7 0 0 0-12-5l-3 4m1 1a7 7 0 0 0 12 5l3-4"/></svg></button></div><div class="player-total"><span id="online-count">—</span><div><span class="player-total-label">PLAYERS<br>ONLINE</span><span id="slot-count">Checking capacity…</span></div><div class="tiny-avatar-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div><div class="board-details"><div><span class="tiny-label">EDITION</span><strong>Minecraft Java</strong></div><div><span class="tiny-label">VERSION</span><strong data-server-version>26.3</strong></div><div><span class="tiny-label">SERVER</span><strong id="server-connection-state">Checking…</strong></div></div><button class="board-copy" data-copy-ip aria-label="Copy server address rechargesmp.xyz"><span><small>SERVER ADDRESS</small><strong>rechargesmp.xyz</strong></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h11v11H9zM4 15H3V3h12v1"/></svg></button><div class="board-foot"><span id="checked-at">Fetching the latest player count…</span><span>↻ EVERY 60s</span></div><p class="status-error" id="status-error" hidden></p></div>
+    </div></section>
 
-    .pixel { font-family: "Press Start 2P", "Courier New", monospace; }
-    .shell { width: min(calc(100% - 48px), var(--page)); margin-inline: auto; }
-    .skip-link { position: fixed; top: -100px; left: 18px; z-index: 200; padding: 10px 14px; background: #fff; color: #111; }
-    .skip-link:focus { top: 12px; }
+    <section class="join-section section wrap" id="join" aria-labelledby="join-title"><div class="section-heading"><div><span class="eyebrow accent">YOUR NEXT CHAPTER</span><h2 id="join-title">YOU'RE THREE<br>STEPS FROM <span class="red">SPAWN.</span></h2></div><button class="button button-red" data-copy-ip>COPY SERVER IP <span aria-hidden="true">⧉</span></button></div><ol class="join-steps"><li><span class="step-number">01</span><h3>OPEN MINECRAFT.</h3><p>Launch Minecraft Java Edition.<br>Server version: <strong data-server-version>26.3</strong>.</p></li><li><span class="step-number">02</span><h3>ADD THE SERVER.</h3><p>Multiplayer → Add Server.<br>Paste <button class="inline-copy" data-copy-ip>rechargesmp.xyz</button> as the address.</p></li><li><span class="step-number">03</span><h3>MAKE YOUR STORY.</h3><p>Save the server, select RechargeSMP,<br>and click Join Server.</p></li></ol>
+      <div class="faq"><details><summary>What happens when I lose all three lives?<span aria-hidden="true">+</span></summary><p>You’ll be able to rejoin when your next life recharges. A missing life recharges every eight hours, up to three lives.</p></details><details><summary>Can I use the same server address every time?<span aria-hidden="true">+</span></summary><p>Yes. Save <strong>rechargesmp.xyz</strong> in your Minecraft Java multiplayer list so you can find it again easily.</p></details><details><summary>How often does the live player count update?<span aria-hidden="true">+</span></summary><p>The website checks server status every 60 seconds while this page is open. The status provider may briefly cache the results. If the lookup fails, we show that clearly instead of inventing a count.</p></details></div>
+    </section>
 
-    /* Header */
-    .site-header {
-      position: relative;
-      z-index: 50;
-      min-height: 88px;
-      display: flex;
-      align-items: stretch;
-      padding: 0 4%;
-      gap: 28px;
-      background: #222;
-      border-top: 3px solid #343434;
-      border-bottom: 2px solid #454545;
-    }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 13px;
-      margin-right: auto;
-      font: 400 14px/1 "Press Start 2P", monospace;
-      white-space: nowrap;
-    }
-    .logo svg { width: 29px; height: 34px; filter: drop-shadow(3px 4px #080808); }
-    .logo strong { color: var(--red); font-weight: 400; }
-    .nav-wrap { display: flex; align-items: stretch; gap: 25px; }
-    .nav { display: flex; align-items: stretch; gap: 28px; }
-    .nav a {
-      position: relative;
-      display: flex;
-      align-items: center;
-      color: #c0c0c0;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .3px;
-    }
-    .nav a:hover, .nav a.active { color: #fff; }
-    .nav a::after {
-      content: "";
-      position: absolute;
+    <section class="last-call"><div class="wrap last-call-inner"><img src="assets/mark.svg" alt="" width="55" height="55"><div><span class="eyebrow">THREE LIVES. ONE MORE STORY.</span><h2>READY TO RECHARGE?</h2></div><button class="button button-cream" data-open-join>LET'S PLAY <span aria-hidden="true">↗</span></button></div></section>
+  </main>
+
+  <footer class="wrap site-footer"><a class="brand" href="#home"><img src="assets/mark.svg" alt="" width="27" height="27"><span>RECHARGE SMP</span></a><p>Make every life count.</p><div><a href="#status">Server status</a><a href="#join">How to join</a><span>© <span id="year">2026</span> RechargeSMP</span></div><small>An independent Minecraft community. Not affiliated with Mojang or Microsoft.</small></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="join-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><img src="assets/mark.svg" alt="" width="38" height="38"><button class="dialog-close" aria-label="Close joining instructions">×</button></div><span class="eyebrow accent">SEE YOU AT SPAWN</span><h2 id="dialog-title">JOIN RECHARGESMP.</h2><p>Open Minecraft Java <span data-server-version>26.3</span>, choose <strong>Multiplayer → Add Server</strong>, then paste this address.</p><div class="dialog-address"><input id="server-address" aria-label="Server address" value="rechargesmp.xyz" readonly><button class="button button-red" data-copy-ip>COPY IP ⧉</button></div><p class="dialog-note">Save the server and click <strong>Join Server</strong>. Your next chapter starts there.</p></dialog>
+</body>
+</html>
